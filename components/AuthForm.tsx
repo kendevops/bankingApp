@@ -78,6 +78,7 @@ const AuthForm = ({ type }: { type: string }) => {
                 control={form.control}
                 name={"password"}
                 label={"Password"}
+                type="password"
                 placeholder={"Enter your password"}
               />
 
