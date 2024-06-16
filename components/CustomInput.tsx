@@ -18,7 +18,7 @@ interface CustomInput {
   name: FieldPath<z.infer<typeof formSchema>>;
   label: string;
   placeholder: string;
-  type?: string;
+  inputType?: string;
 }
 
 const CustomInput = ({
@@ -26,7 +26,7 @@ const CustomInput = ({
   name,
   label,
   placeholder,
-  type,
+  inputType,
 }: CustomInput) => {
   return (
     <FormField
@@ -40,7 +40,7 @@ const CustomInput = ({
               <Input
                 placeholder={placeholder}
                 className="input-class"
-                type={type}
+                type={inputType}
                 {...field}
               />
             </FormControl>

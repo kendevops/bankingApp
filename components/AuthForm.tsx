@@ -9,21 +9,16 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import CustomInput from "./CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/router";
+import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
-    const router = useRouter();
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,28 +34,27 @@ const AuthForm = ({ type }: { type: string }) => {
 
   // 2. Define a submit handler.
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-      setIsLoading(true);
+    setIsLoading(true);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-      try {
-          //Signup with Appwrite & create plaid link token
-          if (type === 'sign-up') {
-            //   const newUser = await signUp(data);
-            //   setUser(newUser);
+    try {
+      //Signup with Appwrite & create plaid link token
+      if (type === "sign-up") {
+          const newUser = await signUp(data);
+          setUser(newUser);
+      }
+      if (type === "sign-in") {
+          const response = await signIn({ email: data.email, password: data.password })
+          if (response) {
+              router.push('/')
           }
-          if (type === 'sign-in') {
-            //   const response = await SignIn({ email: data.email, password: data.password })
-            //   if (response) {
-            //       router.push('/')
-            //   }
-          }
-      } catch(error) {
-          console.log(error)
-      } finally {
-          
-          setIsLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
   return (
     <section className="auth-form">
       <header className="flex flex-col gap-5 md:gap-8">
@@ -104,7 +98,7 @@ const AuthForm = ({ type }: { type: string }) => {
                     control={form.control}
                     name={"password"}
                     label={"Password"}
-                    type="password"
+                    inputType="password"
                     placeholder={"Enter your password"}
                   />
                 </>
@@ -156,6 +150,7 @@ const AuthForm = ({ type }: { type: string }) => {
                       name="dob"
                       label="Date of Birth"
                       placeholder="yyyy-mm-dd"
+                      inputType="date"
                     />
                     <CustomInput
                       control={form.control}
@@ -174,7 +169,7 @@ const AuthForm = ({ type }: { type: string }) => {
                     control={form.control}
                     name={"password"}
                     label={"Password"}
-                    type="password"
+                    inputType="password"
                     placeholder={"Enter your password"}
                   />
                 </>
